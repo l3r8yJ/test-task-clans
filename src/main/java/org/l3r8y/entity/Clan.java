@@ -1,10 +1,12 @@
 package org.l3r8y.entity;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class Clan {
-  private long id;
-  private String name;
-  private int gold;
+  long id;
+  String name;
+  int gold;
 }
