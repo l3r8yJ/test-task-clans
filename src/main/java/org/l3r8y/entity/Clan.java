@@ -9,9 +9,7 @@ import lombok.Value;
 @Value
 @Builder
 public class Clan implements Serializable {
-  @Id
-  long id;
-  @NonNull
-  String name;
+  @Id long id;
+  @NonNull String name;
   int gold;
 }

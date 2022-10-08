@@ -1,6 +1,5 @@
 package org.l3r8y.dto;
 
-
 public record ClanSaveDTO(String name) {
 
   public ClanSaveDTO {
