@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.apache.commons.dbcp.BasicDataSource;
 
 public class DBCPDataSource {
-  private static final BasicDataSource ds = new BasicDataSource();
+  private static final BasicDataSource src = new BasicDataSource();
 
   static {
     try {
@@ -16,16 +16,16 @@ public class DBCPDataSource {
     } catch (final ClassNotFoundException ex) {
       throw new IllegalStateException(ex);
     }
-    ds.setUrl(config().getProperty("URL"));
-    ds.setUsername(config().getProperty("USER"));
-    ds.setPassword(config().getProperty("PASSWORD"));
-    ds.setMinIdle(5);
-    ds.setMaxIdle(10);
-    ds.setMaxOpenPreparedStatements(100);
+    src.setUrl(config().getProperty("URL"));
+    src.setUsername(config().getProperty("USER"));
+    src.setPassword(config().getProperty("PASSWORD"));
+    src.setMinIdle(5);
+    src.setMaxIdle(10);
+    src.setMaxOpenPreparedStatements(100);
   }
 
   public static Connection connection() throws SQLException {
-    return ds.getConnection();
+    return src.getConnection();
   }
 
   private DBCPDataSource(){ }

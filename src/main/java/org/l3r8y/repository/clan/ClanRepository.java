@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.l3r8y.datasource.DBCPDataSource;
@@ -15,12 +14,14 @@ public class ClanRepository {
 
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+  private static void errorLog(final Exception ex) {
+    LOGGER.log(Level.WARNING, ex.getMessage());
+  }
+
   public boolean save(final Clan clan) {
-    final String query = String.format(
-        "INSERT INTO clan (name, gold) VALUES ('%s', '%d');",
-        clan.getName(),
-        clan.getGold()
-    );
+    final String query =
+        String.format(
+            "INSERT INTO clan (name, gold) VALUES ('%s', '%d');", clan.getName(), clan.getGold());
     try (final Connection conn = this.connection()) {
       conn.createStatement().executeUpdate(query);
       return true;
@@ -39,8 +40,8 @@ public class ClanRepository {
   }
 
   public void addGoldToClan(final long clanId, final int gold) {
-    final Clan clan;
-    clan = this.clanBy("id", String.valueOf(clanId)).orElseThrow(ClanNotFoundException::new);
+    final Clan clan =
+        this.clanById(clanId).orElseThrow(ClanNotFoundException::new);
     final int updated = clan.getGold() + gold;
     final String query = String.format("UPDATE clan SET gold=%d WHERE id=%d", updated, clanId);
     try (final Connection conn = this.connection()) {
@@ -78,9 +79,5 @@ public class ClanRepository {
               .build();
     }
     return clan;
-  }
-
-  private static void errorLog(final Exception ex) {
-    LOGGER.log(Level.WARNING, ex.getMessage());
   }
 }
