@@ -14,22 +14,20 @@ public class DefaultClanService implements ClanService {
   }
 
   @Override
-  public Clan get(final long clanId) {
+  public Clan get(final long clanId) throws ClanNotFoundException {
     return this.repository.clanById(clanId).orElseThrow(ClanNotFoundException::new);
   }
 
   @Override
   public boolean save(final Clan clan) {
-    if (this.repository.clanByName(clan.getName()).isPresent()) {
-      throw new ClanAlreadyExistException(clan);
-    }
     return this.repository.save(clan);
   }
 
   @Override
-  public void addGoldById(final long clanId, final int gold) {
-    this.repository
-        .clanById(clanId)
-        .ifPresent(cln -> this.repository.addGoldToClan(clanId, gold));
+  public void addGoldById(final long clanId, final int gold) throws ClanNotFoundException {
+    if (this.repository.clanById(clanId).isEmpty()) {
+      throw new ClanNotFoundException();
+    }
+    this.repository.addGoldToClan(clanId, gold);
   }
 }

@@ -21,7 +21,8 @@ public class ClanRepository {
   public boolean save(final Clan clan) {
     final String query =
         String.format(
-            "INSERT INTO clan (name, gold) VALUES ('%s', '%d');", clan.getName(), clan.getGold());
+            "INSERT INTO clan (name, gold) VALUES ('%s', '%d');", clan.getName(), clan.getGold()
+        );
     try (final Connection conn = this.connection()) {
       conn.createStatement().executeUpdate(query);
       return true;
@@ -39,7 +40,7 @@ public class ClanRepository {
     return this.clanBy("id", String.valueOf(id));
   }
 
-  public void addGoldToClan(final long clanId, final int gold) {
+  public void addGoldToClan(final long clanId, final int gold) throws ClanNotFoundException {
     final Clan clan =
         this.clanById(clanId).orElseThrow(ClanNotFoundException::new);
     final int updated = clan.getGold() + gold;

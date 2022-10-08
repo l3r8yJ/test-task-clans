@@ -2,7 +2,7 @@ package org.l3r8y.exception;
 
 import org.l3r8y.entity.Clan;
 
-public class ClanAlreadyExistException extends RuntimeException {
+public class ClanAlreadyExistException extends Exception {
 
   public ClanAlreadyExistException(final String name) {
     super(String.format("Clan %s already exist!", name));
