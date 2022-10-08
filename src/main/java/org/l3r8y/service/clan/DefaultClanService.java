@@ -1,7 +1,6 @@
 package org.l3r8y.service.clan;
 
 import org.l3r8y.entity.Clan;
-import org.l3r8y.exception.ClanAlreadyExistException;
 import org.l3r8y.exception.ClanNotFoundException;
 import org.l3r8y.repository.clan.ClanRepository;
 

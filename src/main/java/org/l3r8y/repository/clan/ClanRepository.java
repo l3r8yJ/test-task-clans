@@ -6,9 +6,10 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.l3r8y.datasource.DBCPDataSource;
+import org.l3r8y.datasource.DataSource;
 import org.l3r8y.entity.Clan;
 import org.l3r8y.exception.ClanNotFoundException;
+import org.l3r8y.traking.DatabasedGoldChange;
 
 public class ClanRepository {
 
@@ -43,8 +44,10 @@ public class ClanRepository {
   public void addGoldToClan(final long clanId, final int gold) throws ClanNotFoundException {
     final Clan clan =
         this.clanById(clanId).orElseThrow(ClanNotFoundException::new);
-    final int updated = clan.getGold() + gold;
-    final String query = String.format("UPDATE clan SET gold=%d WHERE id=%d", updated, clanId);
+    final int before = clan.getGold();
+    final int after = before + gold;
+    new DatabasedGoldChange(clanId, before, after, "Just increasing").toDatabase();
+    final String query = String.format("UPDATE clan SET gold=%d WHERE id=%d", after, clanId);
     try (final Connection conn = this.connection()) {
       conn.createStatement().executeUpdate(query);
     } catch (final SQLException ex) {
@@ -66,7 +69,7 @@ public class ClanRepository {
   }
 
   private Connection connection() throws SQLException {
-    return DBCPDataSource.connection();
+    return DataSource.connection();
   }
 
   private Clan mapSetToClan(final ResultSet set) throws SQLException {
