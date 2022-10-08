@@ -9,15 +9,10 @@ import java.util.logging.Logger;
 import org.l3r8y.datasource.DataSource;
 import org.l3r8y.entity.Clan;
 import org.l3r8y.exception.ClanNotFoundException;
-import org.l3r8y.traking.DatabasedGoldChange;
 
 public class ClanRepository {
 
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
-  private static void errorLog(final Exception ex) {
-    LOGGER.log(Level.WARNING, ex.getMessage());
-  }
 
   public boolean save(final Clan clan) {
     final String query =
@@ -46,7 +41,6 @@ public class ClanRepository {
         this.clanById(clanId).orElseThrow(ClanNotFoundException::new);
     final int before = clan.getGold();
     final int after = before + gold;
-    new DatabasedGoldChange(clanId, before, after, "Just increasing").toDatabase();
     final String query = String.format("UPDATE clan SET gold=%d WHERE id=%d", after, clanId);
     try (final Connection conn = this.connection()) {
       conn.createStatement().executeUpdate(query);
@@ -83,5 +77,9 @@ public class ClanRepository {
               .build();
     }
     return clan;
+  }
+
+  private static void errorLog(final Exception ex) {
+    LOGGER.log(Level.WARNING, ex.getMessage());
   }
 }
