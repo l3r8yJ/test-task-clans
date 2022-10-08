@@ -6,4 +6,6 @@ public interface ClanService {
   Clan get(long clanId);
 
   boolean save(Clan clan);
+
+  void addGoldById(long clanId, int gold);
 }

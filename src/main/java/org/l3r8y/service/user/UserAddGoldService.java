@@ -12,8 +12,10 @@ public class UserAddGoldService {
   }
 
   public void addGoldToClan(final long userId, final long clanId, final int gold) {
-    final Clan clan = this.clans.get(clanId);
-    // TODO: increase clan gold
+    final Clan clan;
+    synchronized (this) {
+      clan = this.clans.get(clanId);
+    }
     this.clans.save(clan);
   }
 }
